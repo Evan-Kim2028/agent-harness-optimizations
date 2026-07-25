@@ -1,16 +1,52 @@
 # Agent Harness Optimizations
 
-A productivity toolkit for the [Kimi Code CLI](https://github.com/moonshot-ai/kimi-cli) — enforcing efficient tool usage, parallel dispatch, and cost-aware subagent routing through harness-level hooks. The patterns generalize to any harness with a PreToolUse/PostToolUse hook system (Codex, Cursor, Gemini CLI, OpenHands).
+Productivity toolkit for coding CLIs — efficient tool use, parallel dispatch, and context discipline via **hooks as in-conversation training signals**.
 
-> Previously `kimi-code-optimizations`. Focused on Kimi Code CLI; patterns may generalize.
+Originally for [Kimi Code CLI](https://github.com/moonshot-ai/kimi-cli). Now also ships a **Grok Build CLI** suite.
 
 ## What's This?
 
-AI coding agents are powerful, but they burn turns on inefficient patterns: cat'ing files instead of using a structured Read tool, dispatching subagents serially instead of in parallel, defaulting to the most expensive model for cheap discovery work. The patterns differ by harness, but the fix is the same: **hooks as in-conversation training signals** that redirect behavior in real time.
+Agents burn turns on `cat`/`find` via Shell, serial subagents, re-reads, and essay-length finals. Static rules help a little; hooks coach (and sometimes block) in real time.
 
 This repo provides:
 
-- **[`hooks/`](#kimi-code-cli-hooks) + [`bin/`](#helper-scripts)** — Kimi Code CLI suite (Shell coaching, StrReplaceFile validation, swarm nudges, context guards)
+- **[`hooks/grok/`](hooks/grok/)** — Grok Build suite (shell coach, swarm nudges, re-read guards, StrReplace pre-check, Stop brevity gate, failure coach)
+- **[`hooks/kimi/`](#kimi-code-cli-hooks) + [`bin/`](#helper-scripts)** — original Kimi suite
+
+---
+
+## Grok Build CLI (recommended install)
+
+Session analysis on Grok showed heavy Shell-as-discovery, rare `spawn_subagent`, re-reads, and long finals. The Grok port maps tool names (`run_terminal_command`, `read_file`, `search_replace`, `spawn_subagent`) and uses camelCase hook I/O.
+
+```bash
+git clone https://github.com/Evan-Kim2028/agent-harness-optimizations.git
+cd agent-harness-optimizations
+./scripts/install-grok-hooks.sh
+# New Grok session or /hooks reload; verify with /hooks-list
+```
+
+Installs:
+
+| Target | Content |
+|--------|---------|
+| `~/.grok/hooks/agent-harness-optimizations.json` | Hook registration |
+| `~/.grok/AGENTS.md` | Swarm/tool/context rules (marker-bounded section) |
+| `~/.grok/state/` | Per-session trackers |
+
+**Hard blocks:** stale `search_replace` (`strreplace_check`); essay-shaped Stop once per turn (`stop_brevity`). Everything else coaches via `additionalContext` / queued tips.
+
+| Hook area | What it does |
+|-----------|----------------|
+| Shell coach | Prefer native tools over `cat`/`grep`/`find`/`cd` |
+| Swarm / discovery | Nudge parallel `spawn_subagent` after manual grind |
+| Context guards | Re-read + large-file windowing tips |
+| Batch nudge | 3+ sequential same-tool → batch tip |
+| StrReplace check | Block guaranteed-fail edits |
+| Stop brevity | Block essay-shaped finals once per turn |
+| Failure coach | Recovery tips on tool failure |
+
+Details: [`hooks/grok/README.md`](hooks/grok/README.md) · example config: [`config.grok.toml.example`](config.grok.toml.example)
 
 ---
 

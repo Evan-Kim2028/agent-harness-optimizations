@@ -1,0 +1,14 @@
+# Optional: define the same harness via ~/.grok/config.toml instead of
+# hooks/grok-harness.json. JSON install (scripts/install-grok-hooks.sh) is preferred.
+
+# Example PreToolUse block (paths assume this repo location):
+# [[hooks.PreToolUse]]
+# matcher = "Bash|run_terminal_command"
+# hooks = [
+#   { type = "command", command = "python3 /home/evan/Documents/agent-harness-optimizations/hooks/grok/shell_check.py", timeout = 3 },
+# ]
+
+# [[hooks.Stop]]
+# hooks = [
+#   { type = "command", command = "python3 /home/evan/Documents/agent-harness-optimizations/hooks/grok/stop_brevity.py", timeout = 5 },
+# ]

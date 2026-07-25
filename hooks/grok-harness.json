@@ -1,0 +1,141 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/tip_flush.py",
+            "timeout": 2
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|run_terminal_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/shell_check.py",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/shell_output_truncator.py",
+            "timeout": 2
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|search_replace",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/strreplace_check.py",
+            "timeout": 3
+          }
+        ]
+      },
+      {
+        "matcher": "Read|read_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/re_read_guard.py",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/line_offset_enforcer.py",
+            "timeout": 2
+          }
+        ]
+      },
+      {
+        "matcher": "Read|read_file|Grep|grep|Bash|run_terminal_command|ListDir|list_dir|Edit|search_replace",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/discovery_intercept.py",
+            "timeout": 2
+          }
+        ]
+      },
+      {
+        "matcher": "Task|spawn_subagent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/parallel_agent_guard.py",
+            "timeout": 2
+          },
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/background_agent_nudge.py",
+            "timeout": 2
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/batch_nudge.py",
+            "timeout": 2
+          },
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/swarm_nudge_v2.py",
+            "timeout": 2
+          }
+        ]
+      },
+      {
+        "matcher": "TodoWrite|todo_write|SetTodoList",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/todo_persistence_check.py",
+            "timeout": 2
+          }
+        ]
+      },
+      {
+        "matcher": "Read|read_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/re_read_turn_guard.py",
+            "timeout": 2
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/post_tool_failure_coach.py",
+            "timeout": 2
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/stop_brevity.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
