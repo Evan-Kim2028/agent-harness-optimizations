@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""PreToolUse: coach Shell toward native Grok tools; deny keep-alive noops."""
+"""PreToolUse: coach Shell toward native Grok tools (non-blocking).
+
+NOTE: Do NOT hard-deny keep-alive noops (`true`/`:`). Session 019f9fa9… showed
+that deny → model doom-loops on retries and answers via echo/printf/cat instead
+of assistant text. Runtime already warns on empty keep-alives; leave it.
+"""
 from __future__ import annotations
 
 import re
@@ -7,21 +12,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _common import (  # noqa: E402
-    emit_allow,
-    emit_deny,
-    read_event,
-    session_id,
-    tool_input,
-    tool_name,
-)
-
-# Models stall by running true / echo skip with no user-visible text.
-# Session 019f9fa9…: 108 noops; runtime already warns — model ignores.
-_NOOP_RE = re.compile(
-    r"^(true|:|echo\s+skip|echo|pwd|sleep\s+\d+)\s*;?\s*$",
-    re.I,
-)
+from _common import emit_allow, read_event, session_id, tool_input, tool_name  # noqa: E402
 
 
 def main() -> None:
@@ -33,14 +24,6 @@ def main() -> None:
     cmd = tool_input(data).get("command") or ""
     if not isinstance(cmd, str) or not cmd.strip():
         emit_allow(sid=session_id(data))
-        return
-
-    stripped = cmd.strip()
-    if _NOOP_RE.match(stripped) or stripped in {"true", ":", "echo skip"}:
-        emit_deny(
-            "NOOP BLOCKED: do not run keep-alive shells (true / : / echo skip). "
-            "Write the user-visible answer now, or call a real tool. End the turn."
-        )
         return
 
     tips: list[str] = []
