@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stop: block essay-shaped finals once per turn (Grok-native brevity gate)."""
+"""Stop: block only severe essay-shaped finals once per turn (soft brevity gate)."""
 from __future__ import annotations
 
 import re
@@ -9,9 +9,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _common import emit_stop_allow, emit_stop_block, g, read_event  # noqa: E402
 
-# Align with ~/.grok/AGENTS.md empirical thresholds
-MAX_WORDS_NORMAL = 220
-MAX_HEADERS = 2
+# Soft thresholds — only catch egregious walls of text / essay templates.
+# AGENTS.md still coaches normal brevity; this gate no longer fires on
+# moderate structure, training-style --- separators, or short offer lines.
+MAX_WORDS_LONG = 400          # with structure
+MAX_HEADERS_LONG = 3          # with length
+MAX_WORDS_HARD = 600          # length alone
+MAX_HEADERS_ESSAY = 6         # headers alone
 OFFER_RE = re.compile(
     r"(would you like me to|i can also|happy to dig|want me to|let me know if you)",
     re.I,
@@ -52,34 +56,35 @@ def main() -> None:
     headers = len(re.findall(r"(?m)^#{1,3}\s+\S", msg))
     has_offer = bool(OFFER_RE.search(msg))
     has_recap = bool(RECAP_RE.search(msg))
-    has_hr = "\n---\n" in msg or msg.strip().startswith("---")
 
     problems: list[str] = []
-    if words > MAX_WORDS_NORMAL and headers > MAX_HEADERS:
+    # Compound: long AND heavily structured
+    if words > MAX_WORDS_LONG and headers > MAX_HEADERS_LONG:
         problems.append(
             f"too long + structured ({words} words, {headers} headers; "
-            f"normal cap ~{MAX_WORDS_NORMAL} words / ≤{MAX_HEADERS} headers)"
+            f"soft cap ~{MAX_WORDS_LONG}w / ≤{MAX_HEADERS_LONG} headers)"
         )
-    elif words > 400:
-        problems.append(f"final is {words} words (p90 target ~200–300 for normal turns)")
-    if headers >= 5:
+    # Length alone only when extreme
+    elif words > MAX_WORDS_HARD:
+        problems.append(f"final is {words} words (soft hard-cap ~{MAX_WORDS_HARD})")
+    # Essay template shape
+    if headers >= MAX_HEADERS_ESSAY:
         problems.append(f"essay shape ({headers} headers)")
-    if has_recap:
+    # Recap / offer only when already long enough that the filler matters
+    if has_recap and words > 250:
         problems.append("recap stack (Summary/Bottom line/Next steps section)")
-    if has_offer:
-        problems.append("closing offer ('want me to…')")
-    if has_hr and words > 150:
-        problems.append("decorative horizontal rules")
+    if has_offer and words > 250:
+        problems.append("closing offer on a long final")
+    # Decorative --- intentionally not gated (false-positives on short training answers)
 
     if not problems:
         emit_stop_allow()
         return
 
     emit_stop_block(
-        "BREVITY GATE: rewrite the final response shorter before stopping.\n"
+        "BREVITY GATE: rewrite shorter before stopping.\n"
         f"Issues: {'; '.join(problems)}.\n"
-        "Rules: first line = answer/outcome; ≤2 headers; no recap stack; no closing offers; "
-        "after code work use Done/bullets/Verified. Only expand if user asked deep/full/plan/review."
+        "First line = answer; ≤3 headers; no recap stack; no closing offers on long finals."
     )
 
 

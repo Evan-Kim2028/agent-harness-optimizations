@@ -34,7 +34,7 @@ Installs:
 | `~/.grok/AGENTS.md` | Swarm/tool/context rules (marker-bounded section) |
 | `~/.grok/state/` | Per-session trackers |
 
-**Hard blocks:** stale `search_replace` (`strreplace_check`); essay-shaped Stop once per turn (`stop_brevity`). Everything else coaches via `additionalContext` / queued tips.
+**Hard blocks:** stale `search_replace` (`strreplace_check`); severe essay-shaped Stop once per turn (`stop_brevity` — soft: only >400w+structure, >600w, ≥6 headers, or long recap/offer). Everything else coaches via `additionalContext` / queued tips.
 
 | Hook area | What it does |
 |-----------|----------------|
@@ -43,10 +43,12 @@ Installs:
 | Context guards | Re-read + large-file windowing tips |
 | Batch nudge | 3+ sequential same-tool → batch tip |
 | StrReplace check | Block guaranteed-fail edits |
-| Stop brevity | Block essay-shaped finals once per turn |
+| Stop brevity | Block only severe essay finals once per turn (soft) |
 | Failure coach | Recovery tips on tool failure |
 
 Details: [`hooks/grok/README.md`](hooks/grok/README.md) · example config: [`config.grok.toml.example`](config.grok.toml.example)
+
+**Grok tracking (keep results here, not mixed into Kimi):** [`docs/grok/`](docs/grok/) — index + [`RESULTS.md`](docs/grok/RESULTS.md) (before/after from session logs).
 
 ---
 
