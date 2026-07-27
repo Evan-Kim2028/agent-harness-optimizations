@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _common import (  # noqa: E402
     AGENT_TOOLS,
     MANUAL_TOOLS,
+    SPAWN_TIP,
     load_json,
     post_tip,
     read_event,
@@ -67,41 +68,23 @@ def main() -> None:
     can = last_tip == 0 or (total - last_tip) >= COOLDOWN
     tip = None
 
-    if (
-        can
-        and state["manual_since_agent"] >= MANUAL_SINCE_AGENT
-        and state["agents"] > 0
+    # One strong message — situation counters only decide *when*, not *what*.
+    if can and (
+        (state["agents"] == 0 and state["manual"] >= TOTAL_MANUAL)
+        or (state["agents"] > 0 and state["manual_since_agent"] >= MANUAL_SINCE_AGENT)
+        or (
+            state["agents"] > 0
+            and state["manual"] / max(state["agents"], 1) >= RATIO
+        )
     ):
-        tip = (
-            f"TIP: {state['manual_since_agent']}+ manual tools since last agent. "
-            "Delegate remaining discovery/edits to parallel spawn_subagent "
-            "(background=true), then poll outputs."
-        )
-    elif (
-        can
-        and state["agents"] > 0
-        and state["manual"] / max(state["agents"], 1) >= RATIO
-    ):
-        r = state["manual"] / max(state["agents"], 1)
-        tip = (
-            f"TIP: manual:agent ratio {r:.1f}:1. Too much solo grind — "
-            "default to subagents for subtasks needing >2 tool calls."
-        )
-    elif can and state["agents"] == 0 and state["manual"] >= TOTAL_MANUAL:
-        tip = (
-            f"TIP: {state['manual']}+ manual discovery/edit calls, zero agents. "
-            "Dispatch parallel explore agents instead of sequential read/grep/shell."
-        )
+        tip = SPAWN_TIP
 
     # complex shell during manual streak
     if tip is None and name == "run_terminal_command" and state["manual_since_agent"] >= 4:
         cmd = str(tool_input(data).get("command") or "")
         if cmd.count("\n") > 2 or cmd.count("&&") > 1 or len(cmd) > 300:
             if can:
-                tip = (
-                    "TIP: complex multi-step shell with no recent agents. "
-                    "Split independent concerns across background subagents."
-                )
+                tip = SPAWN_TIP
 
     if tip:
         state["last_tip"] = total

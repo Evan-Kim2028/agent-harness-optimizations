@@ -2,20 +2,27 @@
 
 Combine with response-length rules. Hooks reinforce these in-session.
 
-## Parallel execution first
+## Always subagents + parallelize
 
-Before non-trivial work, decide strategy. Default is **not** single-threaded grinding.
+**Default:** for anything beyond a short Q&A or a one-file tweak, **use `spawn_subagent` and parallelize**. Do not sequential-grind `read_file` / `grep` / shell across a multi-file or multi-concern task.
+
+- Independent concerns → **multiple** `spawn_subagent` in **one** turn, `background=true`
+- Exploration → `explore` agents; implementation slices → `general-purpose` (or role agents)
+- After agents finish → parent integrates summaries; if integration needs >2 tools, spawn again
+- Simple single-hop Q&A with no repo walk → direct answer is fine
+
+Hooks inject a short **SWARM** tip when you keep grinding manually — treat it as a hard preference, not optional flavor.
 
 | Question | If yes |
 |----------|--------|
 | >1 file or >1 concern? | Parallel `spawn_subagent` |
 | Need exploration first? | `explore` subagent(s), `background=true` |
-| >2 sequential tool calls expected? | Prefer subagents / batch tools |
+| >2 sequential tool calls expected? | Subagents / batch tools — not a long solo loop |
 | Simple Q&A, no edits? | Direct response OK |
 
-**4-call rule:** about to make a 4th sequential manual call (read/grep/shell) without an agent for this subtask → stop and delegate.
+**4-call rule:** about to make a 4th sequential manual call (read/grep/shell) without an agent for this subtask → **stop and `spawn_subagent`**.
 
-**Anti-pattern:** dispatch agents early, then 50+ manual calls. After agents return, if integration needs >2 tools, spawn again.
+**Anti-pattern:** one agent early, then 50+ manual calls. Or serial foreground agents when they could run in parallel.
 
 ### Swarm pattern
 
@@ -24,8 +31,6 @@ Before non-trivial work, decide strategy. Default is **not** single-threaded gri
 3. ≥3 items → parallel background coders  
 4. Poll with `get_command_or_subagent_output`  
 5. Integrate once
-
-Dispatch **independent** agents in **one** turn with `background=true`.
 
 ## Tool selection
 
@@ -49,11 +54,11 @@ Dispatch **independent** agents in **one** turn with `background=true`.
 
 ## Response length
 
-See response-length section (scale to ask, structure budget, after-work template). Hooks may block essay-shaped finals once per turn.
+See response-length section (scale to ask, structure budget, after-work template). Hooks may block severe essay-shaped finals once per turn.
 
 ## Self-check
 
 1. First line is the answer?  
-2. Could this be parallel subagents?  
+2. Should this be parallel subagents? (default yes if multi-file/multi-concern)  
 3. Am I about to shell-cat a file native tools handle?  
 4. Headers ≤ 2 / no closing offers?

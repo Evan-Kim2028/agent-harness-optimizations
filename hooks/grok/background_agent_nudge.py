@@ -78,8 +78,8 @@ def main() -> None:
             state["tips"] = int(state.get("tips", 0)) + 1
             save_json(path, state)
             tip = (
-                f"💡 BACKGROUND NUDGE: looks independent ({', '.join(hits[:3])}). "
-                "Set background=true so the parent can keep working / spawn more agents."
+                "SWARM: set background=true and spawn more agents in parallel — "
+                "don't wait on one foreground agent."
             )
 
     emit_allow(additional=tip, sid=sid)

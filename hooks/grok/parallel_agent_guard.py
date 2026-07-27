@@ -76,22 +76,11 @@ def main() -> None:
 
         state["consecutive_sequential"] = int(state.get("consecutive_sequential", 0)) + 1
         n = state["consecutive_sequential"]
-        if n >= 3:
-            tip = (
-                f"⚠️ PARALLEL GUARD (urgent): {n} sequential spawn_subagent calls. "
-                "Batch independent agents in ONE turn with background=true, then poll "
-                "get_command_or_subagent_output."
-            )
-        elif n == 2:
-            tip = (
-                "⚠️ PARALLEL GUARD: second sequential agent. If independent, dispatch "
-                "together with background=true in one message."
-            )
-        else:
-            tip = (
-                "⚠️ PARALLEL GUARD: sequential agent dispatch. Prefer background=true "
-                "and parallel spawn_subagent in the same turn."
-            )
+        # Same strong rule whether n is 1 or 5 — keep short.
+        tip = (
+            f"SWARM: {n} sequential spawn(s). Always parallelize — "
+            "multiple spawn_subagent in ONE turn with background=true, then poll."
+        )
     else:
         state["consecutive_sequential"] = 0
 

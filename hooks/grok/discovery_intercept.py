@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PreToolUse: during long manual streaks, coach toward subagents (non-blocking)."""
+"""PreToolUse: during long manual streaks, strong spawn/parallel tip (non-blocking)."""
 from __future__ import annotations
 
 import sys
@@ -9,13 +9,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _common import (  # noqa: E402
     AGENT_TOOLS,
     MANUAL_TOOLS,
+    SPAWN_TIP,
     emit_allow,
     load_json,
     read_event,
     save_json,
     session_id,
     state_path,
-    tool_input,
     tool_name,
 )
 
@@ -53,31 +53,7 @@ def main() -> None:
         state["intercept_count"] = int(state.get("intercept_count", 0)) + 1
         ic = state["intercept_count"]
         if ic == 1 or ic % COOLDOWN == 0:
-            inp = tool_input(data)
-            if name == "read_file":
-                p = inp.get("target_file") or inp.get("path") or ""
-                tip = (
-                    f"INTERCEPT: about to read_file '{p}' during a {streak}-call manual streak. "
-                    "For multi-file work, spawn parallel explore/general-purpose subagents "
-                    "(background=true) instead of grinding."
-                )
-            elif name == "grep":
-                pat = str(inp.get("pattern", ""))[:40]
-                tip = (
-                    f"INTERCEPT: grep '{pat}…' during a {streak}-call manual streak. "
-                    "Multi-concern research → parallel spawn_subagent explore agents."
-                )
-            elif name == "run_terminal_command":
-                cmd = str(inp.get("command", ""))[:60]
-                tip = (
-                    f"INTERCEPT: shell '{cmd}…' during a {streak}-call manual streak. "
-                    "Complex multi-step work often parallelizes via subagents."
-                )
-            else:
-                tip = (
-                    f"INTERCEPT: {streak}-call manual streak. "
-                    "Delegate multi-file discovery to parallel subagents."
-                )
+            tip = SPAWN_TIP
 
     save_json(path, state)
     emit_allow(additional=tip, sid=sid)

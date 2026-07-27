@@ -44,6 +44,14 @@ MANUAL_TOOLS = frozenset(
 )
 AGENT_TOOLS = frozenset({"spawn_subagent"})
 
+# Short, strong, repeated — models ignore long situational tips.
+# Keep one line so additionalContext stays cheap.
+SPAWN_TIP = (
+    "SWARM: Always use spawn_subagent and parallelize independent work "
+    "(explore/general-purpose, background=true). "
+    "Do not sequential-grind read/grep/shell — dispatch subagents, then poll."
+)
+
 
 def read_event() -> dict[str, Any]:
     try:

@@ -28,4 +28,5 @@ State: `~/.grok/state/`. Install: `scripts/install-grok-hooks.sh`.
 
 - Input: Grok camelCase (`toolName`, `toolInput`, `sessionId`); snake_case accepted.
 - Coaching: `decision=allow` + `hookSpecificOutput.additionalContext`; PostToolUse tips are **queued** and flushed on the next PreToolUse.
+- Spawn/swarm tips share one short `SPAWN_TIP` in `_common.py` (“always subagents + parallelize”) — not long situational essays.
 - `strreplace_check` and `stop_brevity` are the only hard blocks by default.
