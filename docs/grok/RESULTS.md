@@ -74,10 +74,9 @@ Hook state after install (active coaching): ~76 sessions with batch/swarm/discov
 
 ## Still weak / next
 
-1. **`spawn_subagent` adoption** — still &lt;3% of sessions; swarm hooks fire but models often keep grinding. Worth stronger discovery_intercept or AGENTS examples.
+1. **`spawn_subagent` adoption** — still rare. Coaching tips did not reach the model (PreToolUse `additionalContext` is not a Grok input). 2026-08-28 subtract unregistered those coaches. Next metric is spawn rate from `signals.json` / `updates.jsonl` after the subtract, plus a `CANARY_GROK_CTX_v1` channel probe. Do not treat this table as proof hooks tutored the model.
 2. **Shell discovery share of shell** stayed ~73–76% — fewer discovery shells overall, but when shell is used it still often looks like discovery (git/build shells mixed in measurement).
-3. **Brevity** improved a lot; residual long answers still happen on multi-step ship tasks (expected).
-4. Re-measure with a fixed task pack for cleaner A/B (optional).
+3. **Brevity** improved a lot; residual long answers still happen on multi-step ship tasks (expected). Credit predates-hooks response-length rules in AGENTS.md.
 
 ## How to re-run
 

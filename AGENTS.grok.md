@@ -1,6 +1,6 @@
 # Grok Build harness rules (global)
 
-Combine with response-length rules. Hooks reinforce these in-session.
+Combine with response-length rules.
 
 ## Always subagents + parallelize
 
@@ -10,8 +10,6 @@ Combine with response-length rules. Hooks reinforce these in-session.
 - Exploration → `explore` agents; implementation slices → `general-purpose` (or role agents)
 - After agents finish → parent integrates summaries; if integration needs >2 tools, spawn again
 - Simple single-hop Q&A with no repo walk → direct answer is fine
-
-Hooks inject a short **SWARM** tip when you keep grinding manually — treat it as a hard preference, not optional flavor.
 
 | Question | If yes |
 |----------|--------|
@@ -54,7 +52,7 @@ Hooks inject a short **SWARM** tip when you keep grinding manually — treat it 
 
 ## Response length
 
-See response-length section (scale to ask, structure budget, after-work template). Hooks may block severe essay-shaped finals once per turn.
+See response-length section (scale to ask, structure budget, after-work template).
 
 ## Self-check
 

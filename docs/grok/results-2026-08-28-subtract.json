@@ -1,0 +1,85 @@
+{
+  "cutover": "2026-08-28 subtract: only strreplace_check installed",
+  "historical": {
+    "spawn_pct": 0.5,
+    "hook_runs_per_tool": "~3-5",
+    "swarm_tips": 7699,
+    "sessions": 1757
+  },
+  "sessions": [
+    {
+      "session": "/home/evan/.grok/sessions/%2Fhome%2Fevan%2FDocuments%2Fagent-harness-optimizations/01a04af7-2907-77f1-9e32-2172f3c3629a",
+      "id": "01a04af7-2907-77f1-9e32-2172f3c3629a",
+      "title": "Explain strreplace_check.py hook blocking behavior",
+      "toolCallCount_signals": 1,
+      "tool_call_updates": 1,
+      "toolsUsed": [
+        "read_file"
+      ],
+      "spawn_n": 0,
+      "spawn_pct": 0.0,
+      "spawn_in_toolsUsed": false,
+      "hook_events": 1,
+      "hook_runs": 1,
+      "hook_runs_per_tool": 1.0,
+      "hook_names": {
+        "global/channel-probe:pre_tool_use[0].hooks[0]": 1
+      },
+      "deny_or_blocked": 0,
+      "canary_in_history": false,
+      "swarm_tip_in_history": false,
+      "contextTokensUsed": 32515,
+      "label": "probe"
+    },
+    {
+      "session": "/home/evan/.grok/sessions/%2Fhome%2Fevan%2FDocuments%2Fagent-harness-optimizations/01a04af7-dbdb-77c0-9822-6da0b8a4e67f",
+      "id": "01a04af7-dbdb-77c0-9822-6da0b8a4e67f",
+      "title": "List grok hooks and deny capability",
+      "toolCallCount_signals": 9,
+      "tool_call_updates": 9,
+      "toolsUsed": [
+        "list_dir",
+        "grep",
+        "read_file"
+      ],
+      "spawn_n": 0,
+      "spawn_pct": 0.0,
+      "spawn_in_toolsUsed": false,
+      "hook_events": 0,
+      "hook_runs": 0,
+      "hook_runs_per_tool": 0.0,
+      "hook_names": {},
+      "deny_or_blocked": 0,
+      "canary_in_history": false,
+      "swarm_tip_in_history": false,
+      "contextTokensUsed": 38763,
+      "label": "map-hooks"
+    },
+    {
+      "session": "/home/evan/.grok/sessions/%2Fhome%2Fevan%2FDocuments%2Fagent-harness-optimizations/01a04af8-6d5f-71d0-bdf0-3b6402d5ee49",
+      "id": "01a04af8-6d5f-71d0-bdf0-3b6402d5ee49",
+      "title": "Grok vs Kimi hook coaching JSON fields",
+      "toolCallCount_signals": 29,
+      "tool_call_updates": 29,
+      "toolsUsed": [
+        "search_tool",
+        "list_dir",
+        "grep",
+        "use_tool",
+        "read_file"
+      ],
+      "spawn_n": 0,
+      "spawn_pct": 0.0,
+      "spawn_in_toolsUsed": false,
+      "hook_events": 0,
+      "hook_runs": 0,
+      "hook_runs_per_tool": 0.0,
+      "hook_names": {},
+      "deny_or_blocked": 0,
+      "canary_in_history": false,
+      "swarm_tip_in_history": false,
+      "contextTokensUsed": 53237,
+      "label": "compare-kimi"
+    }
+  ]
+}

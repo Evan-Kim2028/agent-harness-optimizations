@@ -10,7 +10,7 @@ Agents burn turns on `cat`/`find` via Shell, serial subagents, re-reads, and ess
 
 This repo provides:
 
-- **[`hooks/grok/`](hooks/grok/)** — Grok Build suite (shell coach, swarm nudges, re-read guards, StrReplace pre-check, Stop brevity gate, failure coach)
+- **[`hooks/grok/`](hooks/grok/)** — Grok Build: installed `strreplace_check` deny gate plus `AGENTS.md` swarm/tool rules. Coaching hooks are unregistered (Grok drops PreToolUse `additionalContext`).
 - **[`hooks/kimi/`](#kimi-code-cli-hooks) + [`bin/`](#helper-scripts)** — original Kimi suite
 
 ---
@@ -30,23 +30,12 @@ Installs:
 
 | Target | Content |
 |--------|---------|
-| `~/.grok/hooks/agent-harness-optimizations.json` | Hook registration |
+| `~/.grok/hooks/agent-harness-optimizations.json` | `strreplace_check` only |
 | `~/.grok/AGENTS.md` | Swarm/tool/context rules (marker-bounded section) |
-| `~/.grok/state/` | Per-session trackers |
 
-**Hard blocks:** stale `search_replace` (`strreplace_check`); severe essay-shaped Stop once per turn (`stop_brevity` — soft: only >400w+structure, >600w, ≥6 headers, or long recap/offer). Everything else coaches via `additionalContext` / queued tips.
+**Hard block:** stale `search_replace` (`strreplace_check`). Coaching `additionalContext` hooks are unregistered. Spawn guidance is AGENTS.md text, not a hook.
 
-| Hook area | What it does |
-|-----------|----------------|
-| Shell coach | Prefer native tools over `cat`/`grep`/`find`/`cd` |
-| Swarm / discovery | Nudge parallel `spawn_subagent` after manual grind |
-| Context guards | Re-read + large-file windowing tips |
-| Batch nudge | 3+ sequential same-tool → batch tip |
-| StrReplace check | Block guaranteed-fail edits |
-| Stop brevity | Block only severe essay finals once per turn (soft) |
-| Failure coach | Recovery tips on tool failure |
-
-Details: [`hooks/grok/README.md`](hooks/grok/README.md) · example config: [`config.grok.toml.example`](config.grok.toml.example)
+Details: [`hooks/grok/README.md`](hooks/grok/README.md) · measure a session: `python3 scripts/measure-grok-session.py <session-dir>`
 
 **Grok tracking (keep results here, not mixed into Kimi):** [`docs/grok/`](docs/grok/) — index + [`RESULTS.md`](docs/grok/RESULTS.md) (before/after from session logs).
 

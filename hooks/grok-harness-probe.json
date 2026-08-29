@@ -2,6 +2,16 @@
   "hooks": {
     "PreToolUse": [
       {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/channel_probe.py",
+            "timeout": 2
+          }
+        ]
+      },
+      {
         "matcher": "Edit|search_replace",
         "hooks": [
           {
