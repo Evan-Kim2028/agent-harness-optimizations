@@ -18,6 +18,9 @@ sed -i "s|__REPO_ROOT__|$REPO|g" "$HOOKS_DIR/agent-harness-optimizations.json"
 
 chmod +x "$REPO"/hooks/grok/*.py 2>/dev/null || true
 
+# Avoid double-firing if an earlier copy lived beside this harness json
+rm -f "$HOOKS_DIR/lor-path-first.json" "$HOOKS_DIR/lor_path_first.py"
+
 # Merge AGENTS.grok.md into ~/.grok/AGENTS.md (idempotent via markers)
 AGENTS="$GROK_HOME/AGENTS.md"
 EXTRA="$REPO/AGENTS.grok.md"

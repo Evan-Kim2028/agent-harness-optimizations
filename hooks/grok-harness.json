@@ -1,5 +1,16 @@
 {
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/lor_path_first.py",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Edit|search_replace",
@@ -7,6 +18,28 @@
           {
             "type": "command",
             "command": "python3 __REPO_ROOT__/hooks/grok/strreplace_check.py",
+            "timeout": 3
+          }
+        ]
+      },
+      {
+        "matcher": "Read|read_file|Task|spawn_subagent|Bash|run_terminal_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/lor_path_first.py",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Read|read_file|Task|spawn_subagent|Bash|run_terminal_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 __REPO_ROOT__/hooks/grok/lor_path_first.py",
             "timeout": 3
           }
         ]
