@@ -30,10 +30,10 @@ Installs:
 
 | Target | Content |
 |--------|---------|
-| `~/.grok/hooks/agent-harness-optimizations.json` | `strreplace_check` + `lor_path_first` |
+| `~/.grok/hooks/agent-harness-optimizations.json` | `strreplace_check` |
 | `~/.grok/AGENTS.md` | Swarm/tool/context rules (marker-bounded section) |
 
-**Hard block:** stale `search_replace` (`strreplace_check`). **Steer:** `lor_path_first` (rewrite portable data skills and gold.sales iceberg_scan on lake-of-rage work). Coaching `additionalContext` hooks are unregistered. Spawn guidance is AGENTS.md text, not a hook.
+**Hard block:** stale `search_replace` (`strreplace_check`). Coaching `additionalContext` hooks are unregistered. Spawn guidance is AGENTS.md text, not a hook. This suite is CLI-generic — no product-specific lake/TCG/marketplace gates.
 
 Details: [`hooks/grok/README.md`](hooks/grok/README.md) · measure a session: `python3 scripts/measure-grok-session.py <session-dir>`
 

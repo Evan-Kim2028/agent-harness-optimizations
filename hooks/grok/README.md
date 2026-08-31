@@ -7,7 +7,6 @@ What Grok actually installs is one deny gate. The rest of this directory is unre
 | Hook | Event | Role |
 |------|--------|------|
 | `strreplace_check` | PreToolUse `Edit\|search_replace` | **Blocks** if `old_string` is missing from the file |
-| `lor_path_first` | UserPromptSubmit, PreToolUse read/shell/spawn, PostToolUse | lake-of-rage hop 1. Rewrites `~/.grok/skills/data*` to skill-router. Rewrites `iceberg_scan(gold.sales)` to metadata.json. Denies DuckDB gold.sales spawn until health-sweep Post. Appends `{tool, target}` hops. |
 
 Install: `scripts/install-grok-hooks.sh` (copies `hooks/grok-harness.json` → `~/.grok/hooks/agent-harness-optimizations.json` and splices `AGENTS.grok.md`).
 
